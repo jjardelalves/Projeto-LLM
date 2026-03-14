@@ -1,0 +1,8 @@
+langchain
+langchain_google_genai
+langchain-community
+langchain-huggingface
+langchain_mcp_adapters
+chromadb
+pypdf
+sentence-transformers
