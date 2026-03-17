@@ -45,7 +45,7 @@ LANGSMITH_PROJECT=lca-lc-foundation
 ```
 
 
-Crie um ambiente virtual e instale as dependências. [More info](#python-virtual-environments)
+Crie um ambiente virtual e instale as dependências.
 
 <summary>Usando pip</summary>
 
@@ -62,7 +62,7 @@ pip install -r requirements.txt
 Depois de configurar o setup, rode o seguinte comando para verificar se a instalação ocorreu corretamente:
 
 <details open>
-<summary>Using pip</summary>
+<summary>Usando pip</summary>
 
 ```bash
 source .venv/bin/activate  # No Windows: .venv\Scripts\activate
@@ -73,10 +73,10 @@ python env_utils.py
 
 [Se o arquivo gerar issues, veja a seção abaixo.](#setup-verification-issues)
 
-### Rode os notebooks [More Info](#development-environment)
+### Rode os notebooks 
 
 <details>
-<summary>Using pip</summary>
+<summary>Usando pip</summary>
 
 ```bash
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
