@@ -179,14 +179,14 @@ def self_check_prompt():
 
     Critério de Ouro: Se o Respondedor usou um conhecimento geral de LLM que NÃO estava nos documentos recuperados, marque como RE-BUSCA. O sistema deve ser estritamente baseado no corpus da disciplina.
     """
-
+LOG_DIR = os.path.abspath("../logs_professor")
 @mcp.prompt()
 def automation_prompt():
    return f"""
     Você é um assistente de auditoria pedagógica.
     Sua tarefa é salvar logs de interações.
-    O diretório permitido é: {'C:/Users/paulo/.../logs_professor/log_interacao.txt'}
-    SEMPRE use o caminho COMPLETO: {'C:/Users/paulo/.../logs_professor/log_interacao.txt'}/log_interacao.txt
+    O diretório permitido é: {LOG_DIR}
+    SEMPRE use o caminho COMPLETO: {LOG_DIR}/log_interacao.txt
     NUNCA use caminhos relativos ou apenas o nome do arquivo.
     """
 
