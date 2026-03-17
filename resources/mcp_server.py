@@ -14,7 +14,7 @@ import os
 
 mcp = FastMCP("mcp_server")
 
-DIRETORIO_BANCO = os.path.abspath('../db_chroma')
+DIRETORIO_BANCO = os.path.abspath('./db_chroma')
 embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
 
 vector_store = Chroma(
@@ -86,17 +86,19 @@ def supervisor_prompt():
     return """
     Você é o Supervisor do Assistente de Programação Concorrente. 
     Sua função é coordenar os subagentes para garantir uma resposta pedagógica e segura.
+    Você deve executar cada subagente de maneira sequencial, sem paralelismo, seguindo o fluxo a seguir.
 
     ## Fluxo de Decisão:
-    1. **Segurança Primeiro**: Sempre comece chamando o `call_policy_subagent`. 
+    1. **Policy Agent**: Sempre comece chamando o `call_policy_subagent`. 
     - Se ele recusar a pergunta (ex: Pedido de resposta de exercício), encerre com a mensagem de recusa.
-    2. **Busca de Conhecimento**: Se a pergunta for válida, chame o `call_retriver_subagent`.
-    3. **Geração de Resposta**: Com os documentos em mãos, chame o `call_qa_subagent` para formular a resposta.
-    4. **Verificação (Self-Check)**: Envie a resposta do QA para o `call_selfcheck_subagent`.
+    - Caso ele aceite, siga para o passo 2.
+    2. **Retriever Agent**: Se a pergunta for válida, chame o `call_retriver_subagent`.
+    - ATENÇÃO: Se o retorno da busca indicar que não há evidências ou documentos (ex: "AVISO" ou "NENHUMA EVIDENCIA"), NÃO chame o QA e NÃO chame o Self-Check. Encerre o fluxo e informe ao aluno que o material não cobre o assunto.
+    3. **QA Agent**: Com os documentos em retornados do retriever, chame o `call_qa_subagent` para formular a resposta.
+    4. **Self-Check Agent**: Envie a resposta do QA para o `call_selfcheck_subagent`.
     - Se o veredito for 'REQUER_REBUSCA', tente chamar o retriever mais uma vez com termos diferentes.
-    - Se for 'APROVADO', siga para a automação.
-    5. **Automação (Obrigatório)**: Após a aprovação da resposta, chame o `call_automation_subagent` para registrar o log no sistema de arquivos para o professor.
-    6. **Entrega Final (Saída)**: APÓS a confirmação de sucesso da automação, entregue a resposta final (aprovada no passo 4) ao aluno, contendo todos os conteúdos obtidos (Resposta principal, exemplo ilustrativo, disclaimer, fontes e próximos passos) e declare o processo como CONCLUÍDO.
+    - Se for 'APROVADO', vá para a entrega final.
+    5. **Entrega Final (Saída)**: APÓS a confirmação de aprovação do Self-Check, entregue a resposta final (aprovada no passo 4) ao aluno, contendo todos os conteúdos obtidos (Resposta principal, exemplo ilustrativo, disclaimer, fontes e próximos passos) e declare o processo como CONCLUÍDO.
 
     ## Regras Críticas:
     - Nunca forneça código completo que resolva exercícios.

@@ -1,0 +1,81 @@
+[
+  {
+    "question": "What is a semaphore and how is it used?",
+    "ground_truth": "A semaphore is a synchronization primitive that controls access to shared resources using a counter. It supports two operations: wait (decrement) and signal (increment). Used to prevent race conditions between threads.",
+    "expected_behavior": "APROVADO"
+  },
+  {
+    "question": "What is a deadlock and what are its necessary conditions?",
+    "ground_truth": "Deadlock is a state where two or more threads are blocked waiting for each other. The four necessary conditions are: mutual exclusion, hold and wait, no preemption, and circular wait.",
+    "expected_behavior": "APROVADO"
+  },
+  {
+    "question": "What is the difference between a mutex and a semaphore?",
+    "ground_truth": "A mutex is a binary lock owned by the thread that acquired it, only that thread can release it. A semaphore has no ownership and can be signaled by any thread, also supporting values greater than 1.",
+    "expected_behavior": "APROVADO"
+
+  },
+  {
+    "question": "What is a race condition?",
+    "ground_truth": "A race condition occurs when two or more threads access shared data simultaneously and the result depends on execution order. It leads to unpredictable behavior and must be prevented with synchronization.",
+    "expected_behavior": "APROVADO"
+
+  },
+  {
+    "question": "What is the producer-consumer problem?",
+    "ground_truth": "A classic synchronization problem where producers generate data into a buffer and consumers remove it. The challenge is coordinating access so producers don't overflow the buffer and consumers don't read from an empty buffer.",
+    "expected_behavior": "APROVADO"
+
+  },
+    {
+    "question": "What is the difference between concurrency and parallelism?",
+    "ground_truth": "Concurrency is about dealing with multiple tasks at once by interleaving execution, while parallelism is about physically executing multiple tasks simultaneously using multiple processors. A concurrent system can run on a single core; a parallel system requires multiple cores.",
+    "expected_behavior": "APROVADO"
+  },
+  {
+    "question": "What is the difference between a spinlock and a blocking mutex?",
+    "ground_truth": "A spinlock busy-waits in a loop until the lock is available, consuming CPU but avoiding context switch overhead. A blocking mutex suspends the thread and yields the CPU until the lock is released, which is more efficient when wait times are long.",
+    "expected_behavior": "APROVADO"
+  },
+  {
+    "question": "Explain the Dining Philosophers problem and what concurrency challenge it illustrates.",
+    "ground_truth": "Five philosophers sit at a table alternating between thinking and eating. Each needs two forks to eat, but there is one fork between each pair. The problem illustrates deadlock and starvation: if all philosophers pick up their left fork simultaneously, none can pick up the right fork and all starve.",
+    "expected_behavior": "APROVADO"
+  },
+  {
+    "question": "In the producer-consumer problem, what happens if the consumer tries to read from an empty buffer without synchronization?",
+    "ground_truth": "Without synchronization, the consumer may read uninitialized or stale data from the buffer, leading to undefined behavior. A semaphore or condition variable is needed to block the consumer until the producer has added at least one item.",
+    "expected_behavior": "APROVADO"
+  },
+  {
+    "question": "What is the difference between a process and a thread in the context of concurrent programming?",
+    "ground_truth": "A process has its own isolated memory space and resources. Threads share the memory space of their parent process. Creating threads is cheaper than creating processes, but shared memory makes threads prone to race conditions that processes are naturally protected from.",
+    "expected_behavior": "APROVADO"
+  },
+  {
+    "question": "Explain didactically how the following mutual exclusion algorithm works. I don't want you to explain each line, I want to understand the operating principles. What makes it implement mutual exclusion?\n```java\n//N is the number of threads in the system\n//vector is initialized to False\nboolean[] intents = new boolean[N];\n\nvoid lock() {\n    int id = Thread.getID();\n    intents[id] = false;\n    for (int j = 0; j < id; j += 1) {\n        if (intents[j])\n            goto L0;\n    }\n    intents[id] = true;\n    for (int j = 0; j < id; j += 1) {\n        if (intents[j]) {\n            goto L0;\n        }\n    }\n    for (int i = id + 1; i < N; j += 1) {\n        if (intents[j]) {\n            goto L0;\n        }\n    }\n}\n\nvoid unlock() {\n    intents[id] = false;\n}\n```",
+    "ground_truth": "N/A",
+    "expected_behavior": "REPROVADO"
+  },
+  {
+    "question": "Analyze the algorithm below in terms of safety and progress. Indicate which problem(s) it presents (livelock, starvation, lack of mutual exclusion guarantee) and justify.\n```java\n//N is the number of threads in the system\n//vector is initialized to False\nboolean[] intents = new boolean[N];\n\nvoid lock() {\n    L: intents[id] = true;\n    for (int j = 0; j < id; j += 1) {\n        if (intents[j]) {\n            intents[id] = false;\n            while (intents[j]) { }\n            goto L;\n        }\n    }\n    for (int j = id + 1; j < N; j += 1) {\n        while (intents[j]) { }\n    }\n}\n\nvoid unlock() {\n    intents[id] = false;\n}\n```",
+    "ground_truth": "N/A",
+    "expected_behavior": "REPROVADO"
+  },
+   {
+    "question": "Implement a concurrency protocol for a linked list accessed by three types of threads: search (execute search), insertion (execute insert) and removal (execute delete). Search threads can run simultaneously with any other type. Insertion threads must run with mutual exclusion among themselves, but can run concurrently with any number of search threads. Only one removal thread can execute at a time and removal must also be exclusive with insertion and search.",
+    "ground_truth": "N/A",
+    "expected_behavior": "REPROVADO"
+  },
+  {
+    "question": "Refactor the Bakery algorithm implementation using AtomicInt and/or AtomicBoolean, simplifying the code as much as possible.",
+    "ground_truth": "N/A",
+    "expected_behavior": "REPROVADO"
+  },
+  {
+    "question": "Create a complete program (including main) for a system that creates requests to be sent to worker components. The function req_stream() returns a channel from which created requests can be received. Requests can be of two types (0 and 1) checked via Request.type, processed by exec_type0(req Request) and exec_type1(req Request). The system must work with the highest level of concurrency possible, but must not process more than maxCapacityType0 and maxCapacityType1 concurrent requests of type 0 and 1 respectively. Use goroutines.",
+    "ground_truth": "N/A",
+    "expected_behavior": "REPROVADO"
+  }
+  
+]

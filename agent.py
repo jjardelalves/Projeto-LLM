@@ -17,12 +17,12 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 load_dotenv()
 #model = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite",max_retries=5,timeout=120)
-#model = ChatGroq(
-#    model="llama-3.3-70b-versatile", temperature=0,max_retries=5,timeout=120
-#)
-model = ChatOpenAI(
-    model='gpt-5-nano', max_retries=5, timeout=120
+model = ChatGroq(
+    model="llama-3.3-70b-versatile", temperature=0,max_retries=5,timeout=120
 )
+#model = ChatOpenAI(
+#    model='gpt-5-nano', max_retries=5, timeout=120
+#)
 
 client_local = MultiServerMCPClient(
      {
@@ -90,6 +90,8 @@ async def call_retriver_subagent(query: str) -> str:
 async def call_qa_subagent(query: str, docs: str) -> str:
   """Chama o subagente 3 que estrutura uma resposta de acordo com a pergunta e os documentos passados"""
   # await asyncio.sleep(3)
+  if "NENHUM" in docs.upper() or "AVISO:" in docs.upper() or not docs.strip():
+        return "Não encontrei cobertura suficiente nos materiais da disciplina para responder a esta dúvida de forma embasada."
   response = await agent_qa.ainvoke({"messages": [HumanMessage(content=f"Responda a pergunta com base nos documentos fornecidos. Pergunta: {query}. Documentos recuperados: {docs}")]})
   return response["messages"][-1].content
 
@@ -101,11 +103,6 @@ async def call_selfcheck_subagent(query: str, docs: str, response: str) -> str:
   return response_agent["messages"][-1].content
 
 
-model_sum = ChatOpenAI(model='gpt-4o-mini')
 agent = create_agent(model=model, tools=[call_retriver_subagent, call_policy_subagent, call_qa_subagent, call_selfcheck_subagent], system_prompt=prompts_2[-1][-1].content, 
                                 #checkpointer=InMemorySaver(),
-                                middleware=[SummarizationMiddleware(
-                                    model=model_sum,
-                                    trigger=('tokens',100),
-                                    keep=("messages",1)
-                                )])
+                               )
