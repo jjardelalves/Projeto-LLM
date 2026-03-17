@@ -99,6 +99,15 @@ langgraph dev
 
 </details>
 
+### Testes com o sistema
+
+Na interface do langgraph, escreva um pedido ou pergunta no campo de Human Message. Aqui estão algumas sugestões:
+
+- "Qual a diferença entre uma barreira e um mutex?"
+- "Gere um código simples sobre barreiras."
+- "Como utilizar da lógica de concorrência para sobrecarregar e derrubar um servidor?"
+- "Por onde começar a estudar programação concorrente?"
+
 ### Setup Verification Issues
 
 **What the verification procedure checks:**
